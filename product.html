@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="classic">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bebe Food — Piure de Morcovi Organici</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/themes.css">
+  <style>
+    /* Header (simplified for product page) */
+    .header {
+      padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto; padding: 16px 40px;
+      font-size: 14px; color: var(--text-muted); font-weight: 500;
+    }
+    .breadcrumbs a { color: var(--text-muted); transition: color 0.2s; }
+    .breadcrumbs a:hover { color: var(--primary); }
+    .breadcrumbs .sep { margin: 0 6px; }
+
+    /* Product Layout */
+    .product-layout {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto; padding: 0 40px 64px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    /* Gallery */
+    .gallery { display: flex; flex-direction: column; gap: 12px; }
+    .gallery-main {
+      width: 100%; aspect-ratio: 1;
+      background: var(--pistachio);
+      border: 2px solid var(--border); border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 140px; position: relative; overflow: hidden;
+    }
+    .gallery-float {
+      position: absolute; font-size: 28px;
+      animation: float 6s ease-in-out infinite;
+    }
+    .gallery-float:nth-child(1) { top: 12%; left: 10%; animation-delay: -1s; }
+    .gallery-float:nth-child(2) { top: 20%; right: 12%; animation-delay: -3s; }
+    .gallery-float:nth-child(3) { bottom: 15%; left: 15%; animation-delay: -5s; }
+    .gallery-thumbs { display: flex; gap: 10px; }
+    .gallery-thumb {
+      width: 72px; height: 72px;
+      background: var(--lavender); border: 2px solid var(--border);
+      border-radius: 16px; display: flex; align-items: center;
+      justify-content: center; font-size: 28px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .gallery-thumb:hover, .gallery-thumb.active {
+      border-color: var(--primary); border-style: solid;
+    }
+
+    /* Product Details */
+    .product-details { padding-top: 8px; position: relative; z-index: 2; }
+    .product-brand-link {
+      font-size: 13px; font-weight: 700; color: var(--pistachio);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .product-brand-link:hover { color: var(--primary); }
+    .product-title { font-size: 36px; line-height: 1.15; margin: 4px 0 12px; }
+    .product-rating-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+      font-size: 15px; color: var(--text-muted); font-weight: 500;
+    }
+    .stars { color: var(--primary); }
+
+    /* Price */
+    .product-price-row {
+      display: flex; align-items: baseline; gap: 12px;
+      margin-bottom: 24px; padding-bottom: 24px;
+      border-bottom: 2px solid var(--border);
+    }
+    .price-current {
+      font-family: 'Fraunces', serif; font-size: 36px;
+      font-weight: 700; color: var(--primary);
+    }
+    .price-old { font-size: 18px; color: var(--text-muted); text-decoration: line-through; }
+    .price-save {
+      font-size: 13px; font-weight: 700; color: white;
+      background: var(--strawberry); padding: 4px 14px; border-radius: 100px;
+    }
+
+    /* Age spoon meter */
+    .age-spoon-meter {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 20px; padding: 14px 20px;
+      background: var(--cloud); border: 2px solid var(--border); border-radius: 20px;
+    }
+    .age-spoon-meter .spoon { font-size: 24px; opacity: 0.15; }
+    .age-spoon-meter .spoon.filled { opacity: 1; }
+    .age-spoon-meter .label {
+      margin-left: 8px; font-weight: 700; font-size: 15px; color: var(--text-muted);
+    }
+
+    /* Ingredient list */
+    .ingredient-list {
+      margin-bottom: 20px; padding: 16px 20px;
+      background: var(--lavender); border-radius: 20px;
+    }
+    .ingredient-list-label {
+      font-family: 'Fraunces', serif; font-size: 16px; margin-bottom: 4px;
+    }
+    .ingredient-list p { font-size: 14px; color: var(--text-muted); font-style: italic; }
+
+    /* Variants */
+    .variant-section { margin-bottom: 20px; }
+    .variant-label { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .variant-options { display: flex; gap: 8px; }
+    .variant-option {
+      padding: 10px 22px; border: 2px solid var(--border); border-radius: 100px;
+      background: var(--cloud); cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .variant-option:hover { border-color: var(--primary); }
+    .variant-option.active { border-color: var(--primary); border-style: solid; background: var(--bg); }
+
+    /* Stock */
+    .stock-info {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 20px; font-size: 14px; font-weight: 600;
+    }
+    .stock-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pistachio); }
+    .stock-text { color: var(--pistachio); }
+
+    /* Add to Cart */
+    .quantity-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .qty-control {
+      display: flex; align-items: center;
+      border: 2px solid var(--border); border-radius: 100px; overflow: hidden;
+    }
+    .qty-btn {
+      width: 40px; height: 44px; border: none;
+      background: var(--lavender); font-size: 18px; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: var(--border); }
+    .qty-value {
+      width: 44px; text-align: center; font-size: 16px; font-weight: 700;
+      border: none; background: var(--cloud);
+    }
+    .add-to-cart-btn {
+      flex: 1; background: var(--primary); color: white; border: none;
+      padding: 14px 32px; border-radius: 100px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      box-shadow: 0 4px 16px var(--badge-glow);
+    }
+    .add-to-cart-btn:hover { transform: scale(1.03); box-shadow: 0 8px 24px var(--badge-glow); }
+    .wishlist-btn {
+      width: 48px; height: 48px; border: 2px solid var(--border);
+      border-radius: 50%; background: var(--cloud); cursor: pointer;
+      font-size: 22px; transition: all 0.2s;
+    }
+    .wishlist-btn:hover {
+      border-color: var(--strawberry); color: var(--strawberry); border-style: solid;
+    }
+    .wishlist-btn.liked {
+      border-color: var(--strawberry); border-style: solid;
+      background: var(--strawberry); color: white;
+    }
+
+    /* Safety Badge */
+    .safety-badge {
+      background: var(--pistachio); border-radius: 20px;
+      padding: 18px 22px; margin: 20px 0;
+      display: flex; align-items: flex-start; gap: 14px; color: white;
+    }
+    .safety-badge .icon { font-size: 28px; }
+    .safety-badge .label { font-family: 'Fraunces', serif; font-size: 16px; margin-bottom: 2px; }
+    .safety-badge .text { font-size: 13px; opacity: 0.9; line-height: 1.5; }
+
+    /* Trust Row */
+    .trust-row {
+      display: flex; gap: 20px; margin-top: 20px; padding-top: 20px;
+      border-top: 2px solid var(--border);
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+    }
+    .trust-item .icon { font-size: 16px; }
+
+    /* Tabs */
+    .tabs-section {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto; padding: 0 40px 64px;
+    }
+    .tabs-nav { display: flex; gap: 4px; margin-bottom: 28px; }
+    .tab-btn {
+      padding: 10px 22px; border: 2px solid var(--border); border-radius: 100px;
+      background: var(--cloud); font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--primary); color: var(--text); }
+    .tab-btn.active {
+      background: var(--primary); color: white;
+      border-color: var(--primary); border-style: solid;
+    }
+    .tab-content {
+      line-height: 1.8; color: var(--text-muted); max-width: 760px;
+    }
+    .tab-content h3 { color: var(--text); margin: 20px 0 8px; font-size: 22px; }
+    .tab-content ul { margin-left: 20px; margin-bottom: 16px; }
+    .tab-content li { margin-bottom: 6px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeInUp 0.3s ease; }
+
+    /* Related Products */
+    .related-section {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto; padding: 0 40px 64px;
+    }
+    .related-section h2 { font-size: 28px; margin-bottom: 24px; }
+    .product-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .mini-card {
+      background: var(--cloud); border: 2px solid var(--border);
+      border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 0.3s;
+    }
+    .mini-card:hover {
+      border-color: var(--primary); transform: translateY(-4px) rotate(-1deg);
+      box-shadow: 0 12px 32px var(--card-shadow-hover);
+    }
+    .mini-img {
+      width: 100%; aspect-ratio: 1;
+      background: var(--lavender); display: flex;
+      align-items: center; justify-content: center; font-size: 56px;
+    }
+    .mini-info { padding: 16px 18px; }
+    .mini-brand {
+      font-size: 12px; font-weight: 700; color: var(--pistachio);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+    }
+    .mini-name { font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.2; margin-bottom: 6px; }
+    .mini-price { font-weight: 700; font-size: 17px; color: var(--primary); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .product-layout { grid-template-columns: 1fr; gap: 32px; }
+      .product-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .header { padding: 16px 20px; }
+      .breadcrumbs, .product-layout, .tabs-section, .related-section { padding-left: 20px; padding-right: 20px; }
+      .product-row { grid-template-columns: 1fr; }
+      .trust-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="logo">bebe<em>food</em></a>
+    <div class="header-actions">
+      <a href="shop.html">Magazin</a>
+      <a href="#">Cont</a>
+      <button class="cart-btn">&#x1F6D2; Cos (3)</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="index.html">Acasa</a> <span class="sep">/</span>
+    <a href="shop.html">Piureuri</a> <span class="sep">/</span>
+    <a href="shop.html">Legume</a> <span class="sep">/</span>
+    <strong style="color:var(--text)">Piure de Morcovi Organici</strong>
+  </nav>
+
+  <!-- Product Layout -->
+  <div class="product-layout">
+    <!-- Gallery -->
+    <div class="gallery">
+      <div class="gallery-main" id="mainGallery">
+        <span class="gallery-float">&#x1F33F;</span>
+        <span class="gallery-float">&#x1F331;</span>
+        <span class="gallery-float">&#x2728;</span>
+        <span id="mainEmoji" style="z-index:1">&#x1F955;</span>
+      </div>
+      <div class="gallery-thumbs">
+        <div class="gallery-thumb active" onclick="changeGallery(this, '&#x1F955;', 'var(--pistachio)')">&#x1F955;</div>
+        <div class="gallery-thumb" onclick="changeGallery(this, '&#x1F33F;', 'var(--lavender)')">&#x1F33F;</div>
+        <div class="gallery-thumb" onclick="changeGallery(this, '&#x1F3F7;', 'var(--bg)')">&#x1F3F7;</div>
+        <div class="gallery-thumb" onclick="changeGallery(this, '&#x1F4D6;', 'var(--strawberry)')">&#x1F4D6;</div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="product-details">
+      <a href="#" class="product-brand-link">BioNaturel</a>
+      <h1 class="product-title">Piure de Morcovi Organici &#x1F955;</h1>
+
+      <div class="product-rating-row">
+        <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        <span>4.9 (128 recenzii)</span>
+      </div>
+
+      <div class="product-price-row">
+        <span class="price-current">18.90 lei</span>
+        <span class="price-old">22.50 lei</span>
+        <span class="price-save">-16%</span>
+      </div>
+
+      <div class="age-spoon-meter">
+        <span class="spoon filled">&#x1F944;</span>
+        <span class="spoon">&#x1F944;</span>
+        <span class="spoon">&#x1F944;</span>
+        <span class="spoon">&#x1F944;</span>
+        <span class="spoon">&#x1F944;</span>
+        <span class="label">De la 4 luni</span>
+      </div>
+
+      <div class="ingredient-list">
+        <div class="ingredient-list-label">Ingrediente Naturale</div>
+        <p>Morcovi organici* (98%), apa. *Din agricultura ecologica certificata.</p>
+      </div>
+
+      <div class="variant-section">
+        <div class="variant-label">Alege gramajul:</div>
+        <div class="variant-options">
+          <button class="variant-option active" onclick="selectVariant(this)">125g</button>
+          <button class="variant-option" onclick="selectVariant(this)">190g</button>
+          <button class="variant-option" onclick="selectVariant(this)">2 &times; 125g</button>
+        </div>
+      </div>
+
+      <div class="stock-info">
+        <span class="stock-dot"></span>
+        <span class="stock-text">In stoc</span>
+        <span style="color:var(--text-muted);font-weight:400">&mdash; Livram in 1-2 zile</span>
+      </div>
+
+      <div class="quantity-row">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">-</button>
+          <input class="qty-value" id="qtyValue" value="1" readonly>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <button class="add-to-cart-btn" id="addToCartBtn" onclick="addToCart()">Adauga in Cos &mdash; 18.90 lei</button>
+        <button class="wishlist-btn" id="wishlistBtn" onclick="toggleWishlist()" title="Adauga la favorite">&#9825;</button>
+      </div>
+
+      <div class="safety-badge">
+        <span class="icon">&#x1F331;</span>
+        <div>
+          <div class="label">Organic Certificat EU</div>
+          <div class="text">Fara pesticide, fara aditivi, fara zahar adaugat. Certificat conform regulamentului UE pentru agricultura ecologica.</div>
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust-item"><span class="icon">&#x1F69A;</span> Livrare gratuita 150lei+</div>
+        <div class="trust-item"><span class="icon">&#x21A9;</span> 30 zile retur</div>
+        <div class="trust-item"><span class="icon">&#x1F512;</span> Plata securizata</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-section">
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab(this, 'desc')">Descriere</button>
+      <button class="tab-btn" onclick="switchTab(this, 'nutrition')">Nutritie</button>
+      <button class="tab-btn" onclick="switchTab(this, 'ingredients')">Ingrediente</button>
+      <button class="tab-btn" onclick="switchTab(this, 'reviews')">Recenzii (128)</button>
+    </div>
+    <div class="tab-content">
+      <div class="tab-panel active" id="tab-desc">
+        <p>Piureul nostru de morcovi este preparat din morcovi organici proaspeti, cultivati in ferme romanesti certificate. Textura fina si gustul natural dulce il fac ideal pentru diversificarea alimentatiei bebelusului.</p>
+        <h3>De Ce Morcovi?</h3>
+        <ul>
+          <li>Bogati in beta-caroten &mdash; esential pentru dezvoltarea vederii</li>
+          <li>Sursa naturala de fibre pentru digestie sanatoasa</li>
+          <li>Gust natural dulce, acceptat de majoritatea bebelusilor</li>
+          <li>Textura fina, ideala pentru primele guri</li>
+        </ul>
+        <h3>Cum se Prepara</h3>
+        <ul>
+          <li>Se serveste la temperatura camerei sau usor incalzit</li>
+          <li>Dupa deschidere, se pastreaza la frigider max. 24h</li>
+          <li>Se poate combina cu piure de cartof, orez sau alte legume</li>
+        </ul>
+      </div>
+      <div class="tab-panel" id="tab-nutrition">
+        <h3>Valori Nutritionale per 100g</h3>
+        <ul>
+          <li>Energie: 35 kcal</li>
+          <li>Grasimi: 0.1g (din care saturate: 0g)</li>
+          <li>Carbohidrati: 7.6g (din care zaharuri: 3.5g)</li>
+          <li>Fibre: 2.8g</li>
+          <li>Proteine: 0.6g</li>
+          <li>Sare: 0.03g</li>
+          <li>Vitamina A: 835μg (104% DZR)</li>
+        </ul>
+      </div>
+      <div class="tab-panel" id="tab-ingredients">
+        <h3>Lista Completa de Ingrediente</h3>
+        <p>Morcovi organici* (98%), apa.</p>
+        <p style="margin-top:12px; font-size:13px;">*Din agricultura ecologica certificata conform regulamentului UE 2018/848.</p>
+        <h3>Alergeni</h3>
+        <p>Acest produs nu contine alergeni conform legislatiei in vigoare.</p>
+      </div>
+      <div class="tab-panel" id="tab-reviews">
+        <h3>Ce spun parintii</h3>
+        <div style="padding:16px 0; border-bottom: 1px solid var(--border);">
+          <strong>Maria P.</strong> <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><br>
+          <span style="font-size:14px;">"Bebelusul meu adora acest piure! Consistenta perfecta si gustul natural."</span>
+        </div>
+        <div style="padding:16px 0; border-bottom: 1px solid var(--border);">
+          <strong>Andrei I.</strong> <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><br>
+          <span style="font-size:14px;">"Calitate excelenta, se vede ca sunt ingrediente cu adevarat organice."</span>
+        </div>
+        <div style="padding:16px 0;">
+          <strong>Elena D.</strong> <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><br>
+          <span style="font-size:14px;">"Foarte bun, dar as fi vrut un gramaj mai mare disponibil."</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  <div class="related-section">
+    <h2>S-ar putea sa-ti placa &#x2764;</h2>
+    <div class="product-row">
+      <div class="mini-card" onclick="location.href='product.html'">
+        <div class="mini-img">&#x1F350;</div>
+        <div class="mini-info">
+          <div class="mini-brand">BioNaturel</div>
+          <div class="mini-name">Piure de Pere Williams</div>
+          <div class="mini-price">17.50 lei</div>
+        </div>
+      </div>
+      <div class="mini-card" onclick="location.href='product.html'">
+        <div class="mini-img">&#x1F34E;</div>
+        <div class="mini-info">
+          <div class="mini-brand">BioNaturel</div>
+          <div class="mini-name">Piure de Mere si Scortisoara</div>
+          <div class="mini-price">16.90 lei</div>
+        </div>
+      </div>
+      <div class="mini-card" onclick="location.href='product.html'">
+        <div class="mini-img">&#x1F957;</div>
+        <div class="mini-info">
+          <div class="mini-brand">PureStart</div>
+          <div class="mini-name">Mix de Legume cu Quinoa</div>
+          <div class="mini-price">28.00 lei</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Bebe Food. Toate drepturile rezervate.</span>
+    </div>
+  </footer>
+
+  <script src="assets/theme-switcher.js"></script>
+  <script>
+    // Gallery interaction
+    function changeGallery(thumb, emoji, bgColor) {
+      document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+      document.getElementById('mainEmoji').innerHTML = emoji;
+      document.getElementById('mainGallery').style.background = bgColor;
+    }
+
+    // Variant selection
+    function selectVariant(btn) {
+      document.querySelectorAll('.variant-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Quantity
+    function changeQty(delta) {
+      const input = document.getElementById('qtyValue');
+      let val = parseInt(input.value) + delta;
+      if (val < 1) val = 1;
+      if (val > 99) val = 99;
+      input.value = val;
+    }
+
+    // Add to cart animation
+    function addToCart() {
+      const btn = document.getElementById('addToCartBtn');
+      btn.textContent = 'Adaugat! ✓';
+      btn.style.background = 'var(--pistachio)';
+      setTimeout(() => {
+        btn.textContent = 'Adauga in Cos — 18.90 lei';
+        btn.style.background = '';
+      }, 1500);
+    }
+
+    // Wishlist toggle
+    function toggleWishlist() {
+      const btn = document.getElementById('wishlistBtn');
+      btn.classList.toggle('liked');
+      btn.innerHTML = btn.classList.contains('liked') ? '&#9829;' : '&#9825;';
+    }
+
+    // Tab switching
+    function switchTab(tabBtn, panelId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tabBtn.classList.add('active');
+      document.getElementById('tab-' + panelId).classList.add('active');
+    }
+  </script>
+</body>
+</html>

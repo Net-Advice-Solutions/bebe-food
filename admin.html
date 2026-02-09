@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="classic">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bebe Food Admin — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/themes.css">
+  <style>
+    body { padding-bottom: 80px; }
+
+    .app { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 248px; background: var(--cloud);
+      border-right: 2px solid var(--border);
+      display: flex; flex-direction: column; flex-shrink: 0;
+      position: relative; z-index: 5;
+    }
+    .sidebar-logo {
+      padding: 20px 24px; border-bottom: 2px solid var(--border);
+      font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700;
+    }
+    .sidebar-logo em { font-style: normal; color: var(--primary); }
+    .sidebar-label {
+      padding: 20px 24px 8px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+    }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a {
+      display: flex; align-items: center; gap: 12px; padding: 10px 24px;
+      font-size: 15px; font-weight: 600; color: var(--text-muted);
+      border-radius: 0 100px 100px 0; margin-right: 16px; transition: all 0.2s;
+    }
+    .sidebar-nav li a:hover { color: var(--text); background: var(--bg); }
+    .sidebar-nav li a.active { color: white; background: var(--primary); }
+    .sidebar-nav li a .icon { font-size: 18px; width: 24px; text-align: center; }
+    .sidebar-badge {
+      margin-left: auto; font-size: 11px; font-weight: 800;
+      background: var(--strawberry); color: white; padding: 1px 8px;
+      border-radius: 100px;
+    }
+    .sidebar-nav li a.active .sidebar-badge { background: white; color: var(--primary); }
+    .sidebar-footer {
+      margin-top: auto; padding: 16px 24px; border-top: 2px solid var(--border);
+      font-size: 13px; color: var(--text-muted); font-weight: 500;
+    }
+
+    /* Main */
+    .main { flex: 1; overflow-y: auto; position: relative; z-index: 2; }
+    .main-header {
+      background: var(--cloud); border-bottom: 2px solid var(--border);
+      padding: 18px 32px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .main-header h1 { font-size: 26px; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-right a { font-size: 14px; color: var(--text-muted); font-weight: 600; transition: color 0.2s; }
+    .header-right a:hover { color: var(--primary); }
+
+    .content { padding: 24px 32px; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--cloud); border: 2px solid var(--border); border-radius: 20px;
+      padding: 20px; text-align: center; transition: all 0.3s;
+      animation: fadeInUp 0.4s ease backwards;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
+    .stat-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 24px var(--card-shadow-hover); }
+    .stat-icon { font-size: 28px; margin-bottom: 6px; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1.1; }
+    .stat-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-change { font-size: 12px; font-weight: 700; }
+    .stat-change.up { color: var(--pistachio); }
+    .stat-change.down { color: var(--strawberry); }
+
+    .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+    /* Panels */
+    .panel {
+      background: var(--cloud); border: 2px solid var(--border); border-radius: 20px;
+      overflow: hidden; margin-bottom: 16px;
+      animation: fadeInUp 0.5s ease backwards;
+    }
+    .panel:nth-child(1) { animation-delay: 0.1s; }
+    .panel:nth-child(2) { animation-delay: 0.2s; }
+    .panel:nth-child(3) { animation-delay: 0.3s; }
+    .panel-header {
+      padding: 16px 20px; border-bottom: 2px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .panel-header h3 { font-size: 18px; }
+    .panel-link { font-size: 13px; font-weight: 700; color: var(--primary); transition: color 0.2s; }
+    .panel-link:hover { text-decoration: underline; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; padding: 10px 20px; border-bottom: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    td { padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+
+    .order-id { font-weight: 700; color: var(--primary); }
+    .status {
+      display: inline-block; padding: 3px 12px; border-radius: 100px;
+      font-size: 11px; font-weight: 700;
+    }
+    .status.processing { background: var(--badge-glow); color: var(--primary); }
+    .status.shipped { background: rgba(168,197,160,0.25); color: #5A8A50; }
+    .status.delivered { background: rgba(168,197,160,0.35); color: #4A7A40; }
+    .status.cancelled { background: rgba(232,136,154,0.15); color: var(--strawberry); }
+
+    /* Alert list */
+    .alert-list { list-style: none; }
+    .alert-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+      border-bottom: 1px solid var(--border); font-size: 14px;
+      transition: background 0.15s;
+    }
+    .alert-item:last-child { border-bottom: none; }
+    .alert-item:hover { background: var(--bg); }
+    .alert-icon { font-size: 24px; }
+    .alert-info { flex: 1; }
+    .alert-name { font-weight: 700; margin-bottom: 1px; }
+    .alert-stock { font-size: 12px; color: var(--strawberry); font-weight: 700; }
+    .alert-action {
+      font-size: 12px; font-weight: 700; color: var(--primary); cursor: pointer;
+      background: var(--badge-glow); padding: 4px 12px; border-radius: 100px;
+      transition: all 0.2s; border: none; font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .alert-action:hover { background: var(--primary); color: white; }
+
+    /* Quick actions */
+    .quick-actions { list-style: none; }
+    .quick-action {
+      display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+      border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s;
+    }
+    .quick-action:last-child { border-bottom: none; }
+    .quick-action:hover { background: var(--bg); }
+    .quick-action .icon { font-size: 20px; }
+    .quick-action span { font-size: 14px; font-weight: 600; }
+
+    .chart-placeholder {
+      height: 200px; background: var(--bg); border: 2px solid var(--border);
+      border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--text-muted); margin: 16px 20px 20px; font-weight: 600;
+      position: relative; overflow: hidden;
+    }
+    /* Fake animated chart bars */
+    .chart-bar {
+      position: absolute; bottom: 0; background: var(--primary); border-radius: 6px 6px 0 0;
+      opacity: 0.3; animation: growBar 1s ease forwards;
+    }
+    @keyframes growBar {
+      from { height: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 2px solid var(--border); }
+      .sidebar-logo { border-bottom: none; }
+      .sidebar-label { display: none; }
+      .sidebar-footer { display: none; }
+      .two-col { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><a href="index.html" style="color:inherit;text-decoration:none">bebe<em>food</em> &#x1F423;</a></div>
+      <div class="sidebar-label">Principal</div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active"><span class="icon">&#x1F3E0;</span> Dashboard</a></li>
+        <li><a href="#"><span class="icon">&#x1F4E6;</span> Comenzi <span class="sidebar-badge">12</span></a></li>
+        <li><a href="#"><span class="icon">&#x1F465;</span> Clienti</a></li>
+      </ul>
+      <div class="sidebar-label">Catalog</div>
+      <ul class="sidebar-nav">
+        <li><a href="#"><span class="icon">&#x1F34E;</span> Produse</a></li>
+        <li><a href="#"><span class="icon">&#x1F4C2;</span> Categorii</a></li>
+        <li><a href="#"><span class="icon">&#x1F3F7;</span> Branduri</a></li>
+      </ul>
+      <div class="sidebar-label">Rapoarte</div>
+      <ul class="sidebar-nav">
+        <li><a href="#"><span class="icon">&#x1F4CA;</span> Vanzari</a></li>
+        <li><a href="#"><span class="icon">&#x1F4CB;</span> Inventar</a></li>
+      </ul>
+      <div class="sidebar-footer">Admin &middot; v1.0</div>
+    </aside>
+
+    <div class="main">
+      <div class="main-header">
+        <h1>Dashboard &#x1F44B;</h1>
+        <div class="header-right">
+          <a href="#">Setari</a>
+          <a href="index.html">Vizualizeaza Magazin &rarr;</a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F4E6;</div>
+            <div class="stat-value">24</div>
+            <div class="stat-label">Comenzi Azi</div>
+            <div class="stat-change up">+12% &#x2191;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F4B0;</div>
+            <div class="stat-value">3,240</div>
+            <div class="stat-label">Venit Azi (lei)</div>
+            <div class="stat-change up">+8% &#x2191;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F34E;</div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Produse Active</div>
+            <div class="stat-change down">3 stoc redus</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F465;</div>
+            <div class="stat-value">186</div>
+            <div class="stat-label">Clienti Noi</div>
+            <div class="stat-change up">+22% &#x2191;</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Vanzari (ultimele 7 zile) &#x1F4C8;</h3>
+                <a href="#" class="panel-link">Raport complet &rarr;</a>
+              </div>
+              <div class="chart-placeholder" id="chartArea">
+                <div class="chart-bar" style="left:8%; width:8%; height:40%; animation-delay:0.1s;"></div>
+                <div class="chart-bar" style="left:20%; width:8%; height:65%; animation-delay:0.2s;"></div>
+                <div class="chart-bar" style="left:32%; width:8%; height:50%; animation-delay:0.3s;"></div>
+                <div class="chart-bar" style="left:44%; width:8%; height:80%; animation-delay:0.4s;"></div>
+                <div class="chart-bar" style="left:56%; width:8%; height:55%; animation-delay:0.5s;"></div>
+                <div class="chart-bar" style="left:68%; width:8%; height:90%; animation-delay:0.6s;"></div>
+                <div class="chart-bar" style="left:80%; width:8%; height:70%; animation-delay:0.7s;"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Comenzi Recente &#x1F4E6;</h3>
+                <a href="#" class="panel-link">Toate comenzile &rarr;</a>
+              </div>
+              <table>
+                <thead>
+                  <tr><th>Comanda</th><th>Client</th><th>Produse</th><th>Total</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="order-id">#TT-1247</td>
+                    <td>Maria Popescu</td>
+                    <td>3 produse</td>
+                    <td>87.30 lei</td>
+                    <td><span class="status processing">Procesare</span></td>
+                  </tr>
+                  <tr>
+                    <td class="order-id">#TT-1246</td>
+                    <td>Andrei Ionescu</td>
+                    <td>5 produse</td>
+                    <td>142.50 lei</td>
+                    <td><span class="status shipped">Expediata</span></td>
+                  </tr>
+                  <tr>
+                    <td class="order-id">#TT-1245</td>
+                    <td>Elena Dumitrescu</td>
+                    <td>2 produse</td>
+                    <td>46.40 lei</td>
+                    <td><span class="status delivered">Livrata</span></td>
+                  </tr>
+                  <tr>
+                    <td class="order-id">#TT-1244</td>
+                    <td>Cristian Popa</td>
+                    <td>1 produs</td>
+                    <td>28.00 lei</td>
+                    <td><span class="status delivered">Livrata</span></td>
+                  </tr>
+                  <tr>
+                    <td class="order-id">#TT-1243</td>
+                    <td>Ana Voicu</td>
+                    <td>4 produse</td>
+                    <td>96.80 lei</td>
+                    <td><span class="status cancelled">Anulata</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Actiuni Rapide</h3>
+              </div>
+              <ul class="quick-actions">
+                <li class="quick-action"><span class="icon">&#x2795;</span> <span>Adauga Produs</span></li>
+                <li class="quick-action"><span class="icon">&#x1F4E6;</span> <span>Proceseaza Comenzi</span></li>
+                <li class="quick-action"><span class="icon">&#x1F3F7;</span> <span>Gestioneaza Reduceri</span></li>
+                <li class="quick-action"><span class="icon">&#x1F4CA;</span> <span>Export Raport</span></li>
+              </ul>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Stoc Redus &#x26A0;</h3>
+                <a href="#" class="panel-link">Inventar &rarr;</a>
+              </div>
+              <ul class="alert-list">
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F955;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Piure de Morcovi 125g</div>
+                    <div class="alert-stock">3 buc ramase</div>
+                  </div>
+                  <button class="alert-action" onclick="this.textContent='Comandat ✓'; this.style.background='var(--pistachio)'; this.style.color='white';">Restock</button>
+                </li>
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F34C;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Terci Banane si Ovaz</div>
+                    <div class="alert-stock">5 buc ramase</div>
+                  </div>
+                  <button class="alert-action" onclick="this.textContent='Comandat ✓'; this.style.background='var(--pistachio)'; this.style.color='white';">Restock</button>
+                </li>
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F35E;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Biscuiti Dentitie Ovaz</div>
+                    <div class="alert-stock">2 buc ramase</div>
+                  </div>
+                  <button class="alert-action" onclick="this.textContent='Comandat ✓'; this.style.background='var(--pistachio)'; this.style.color='white';">Restock</button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Top Produse &#x1F31F;</h3>
+              </div>
+              <ul class="alert-list">
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F955;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Piure de Morcovi Organici</div>
+                    <div class="alert-stock" style="color:var(--pistachio)">128 vandute</div>
+                  </div>
+                </li>
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F34E;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Piure de Mere si Scortisoara</div>
+                    <div class="alert-stock" style="color:var(--pistachio)">96 vandute</div>
+                  </div>
+                </li>
+                <li class="alert-item">
+                  <span class="alert-icon">&#x1F957;</span>
+                  <div class="alert-info">
+                    <div class="alert-name">Mix Legume cu Quinoa</div>
+                    <div class="alert-stock" style="color:var(--pistachio)">84 vandute</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/theme-switcher.js"></script>
+</body>
+</html>

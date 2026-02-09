@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="classic">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bebe Food — Acasa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/themes.css">
+  <style>
+    /* Hero */
+    .hero {
+      background: var(--hero-gradient);
+      border-bottom: 2px solid var(--border);
+      padding: 48px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 100%;
+      position: relative; z-index: 2;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--badge-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-text { max-width: 560px; animation: fadeInUp 0.6s ease; }
+    .hero-text h1 {
+      font-size: 38px; line-height: 1.15; margin-bottom: 8px;
+    }
+    .hero-text p { font-size: 16px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6; }
+    .hero-cta {
+      display: inline-block; background: var(--primary); color: #fff;
+      padding: 12px 32px; border-radius: 100px; font-weight: 700; font-size: 15px;
+      transition: all 0.25s; box-shadow: 0 4px 16px var(--badge-glow);
+    }
+    .hero-cta:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 24px var(--badge-glow); }
+    .hero-emoji {
+      font-size: 100px; line-height: 1; margin-left: 40px; flex-shrink: 0;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Trust bar */
+    .trust-bar {
+      display: flex; justify-content: center; padding: 14px 32px; gap: 0;
+      border-bottom: 2px solid var(--border); background: var(--cloud);
+      position: relative; z-index: 2;
+    }
+    .trust-item {
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      padding: 0 24px; display: flex; align-items: center; gap: 8px;
+    }
+    .trust-item + .trust-item { border-left: 2px solid var(--border); }
+    .trust-item span { font-size: 16px; }
+
+    /* Sections */
+    .section {
+      max-width: 1160px; margin: 0 auto; padding: 40px 40px 32px;
+      position: relative; z-index: 2;
+    }
+    .section-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 24px;
+    }
+    .section-header h2 { font-size: 26px; }
+    .section-link {
+      color: var(--primary); font-weight: 700; font-size: 14px;
+      transition: color 0.2s;
+    }
+    .section-link:hover { text-decoration: underline; }
+
+    /* Product grid */
+    .product-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    }
+
+    /* Category grid */
+    .cat-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .cat-card {
+      background: var(--cloud); border: 2px solid var(--border);
+      border-radius: 20px; padding: 24px 18px; text-align: center;
+      cursor: pointer; transition: all 0.3s;
+      animation: fadeInUp 0.5s ease backwards;
+    }
+    .cat-card:nth-child(1) { animation-delay: 0.05s; }
+    .cat-card:nth-child(2) { animation-delay: 0.1s; }
+    .cat-card:nth-child(3) { animation-delay: 0.15s; }
+    .cat-card:nth-child(4) { animation-delay: 0.2s; }
+    .cat-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--card-shadow-hover);
+    }
+    .cat-card .icon { font-size: 36px; margin-bottom: 8px; }
+    .cat-card h3 { font-size: 16px; }
+
+    /* Newsletter */
+    .newsletter {
+      background: var(--cloud); border: 2px solid var(--border);
+      border-radius: 20px; padding: 40px; text-align: center;
+      max-width: 640px; margin: 0 auto 40px;
+      position: relative; z-index: 2;
+      animation: fadeInUp 0.6s ease;
+    }
+    .newsletter h2 { font-size: 26px; margin-bottom: 8px; }
+    .newsletter p { color: var(--text-muted); margin-bottom: 20px; }
+    .newsletter-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; }
+    .newsletter-input {
+      flex: 1; padding: 12px 20px; border: 2px solid var(--border);
+      border-radius: 100px; background: var(--bg);
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .newsletter-input:focus { border-color: var(--primary); border-style: solid; }
+    .newsletter-submit {
+      background: var(--primary); color: white; border: none;
+      padding: 12px 28px; border-radius: 100px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .newsletter-submit:hover { background: var(--primary-hover); transform: scale(1.03); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero { flex-direction: column; text-align: center; padding: 32px 24px; }
+      .hero-emoji { margin: 20px 0 0; }
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .trust-bar { flex-wrap: wrap; gap: 8px; }
+      .trust-item + .trust-item { border-left: none; }
+      .header { padding: 0 20px; }
+      .section { padding: 24px 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">bebe<em>food</em></a>
+      <div class="header-actions">
+        <a href="#">Cautare</a>
+        <a href="#">Cont</a>
+        <a href="#">Favorite &#9825;</a>
+        <a href="admin.html" class="admin-link">Admin</a>
+        <button class="cart-btn">&#x1F6D2; Cos (3)</button>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="active">Acasa</a>
+      <a href="shop.html">Toate Produsele</a>
+      <a href="shop.html">Piureuri</a>
+      <a href="shop.html">Cereale</a>
+      <a href="shop.html">Gustari</a>
+      <a href="shop.html">Mese</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Primele gusturi care conteaza &#x2728;</h1>
+      <p>Piureuri organice, cereale si gustari sanatoase certificate EU pentru primele luni de viata ale bebelusului tau.</p>
+      <a href="shop.html" class="hero-cta">Descopera Colectia &#8594;</a>
+    </div>
+    <div class="hero-emoji">&#x1F955;</div>
+  </section>
+
+  <!-- Trust bar -->
+  <div class="trust-bar">
+    <div class="trust-item"><span>&#x1F6E1;</span> 100% Organic</div>
+    <div class="trust-item"><span>&#x1F441;</span> Ingrediente Transparente</div>
+    <div class="trust-item"><span>&#x1F69A;</span> Livrare Gratuita 150 lei+</div>
+    <div class="trust-item"><span>&#10084;</span> 10,000+ Parinti Fericiti</div>
+  </div>
+
+  <!-- Products -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Produse Populare &#x1F525;</h2>
+      <a href="shop.html" class="section-link">Vezi toate &#8594;</a>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">4+</span>
+          </div>
+          &#x1F955;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">BioNaturel</div>
+          <div class="product-name">Piure de Morcovi Organici</div>
+          <div class="product-meta">
+            <div class="product-price">18.90 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">6+</span>
+          </div>
+          <span class="badge-sale">&minus;15%</span>
+          &#x1F34C;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">HappyBelly</div>
+          <div class="product-name">Terci de Banane si Ovaz</div>
+          <div class="product-meta">
+            <div class="product-price">22.50 lei <span class="old">26.50 lei</span></div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.7</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon-label">8+</span>
+          </div>
+          &#x1F957;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">PureStart</div>
+          <div class="product-name">Mix de Legume cu Quinoa</div>
+          <div class="product-meta">
+            <div class="product-price">28.00 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5.0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">4+</span>
+          </div>
+          &#x1F34E;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">BioNaturel</div>
+          <div class="product-name">Piure de Mere si Scortisoara</div>
+          <div class="product-meta">
+            <div class="product-price">16.90 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">4+</span>
+          </div>
+          &#x1F350;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">BioNaturel</div>
+          <div class="product-name">Piure de Pere Williams</div>
+          <div class="product-meta">
+            <div class="product-price">17.50 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">6+</span>
+          </div>
+          &#x1F35E;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">HappyBelly</div>
+          <div class="product-name">Biscuiti de Dentitie</div>
+          <div class="product-meta">
+            <div class="product-price">24.00 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.6</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon">&#x1F944;</span>
+            <span class="spoon-label">6+</span>
+          </div>
+          &#x1F33D;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">PureStart</div>
+          <div class="product-name">Cereale Multicereale</div>
+          <div class="product-meta">
+            <div class="product-price">21.00 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" onclick="location.href='product.html'">
+        <div class="product-img">
+          <div class="spoon-meter">
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon filled">&#x1F944;</span>
+            <span class="spoon-label">8+</span>
+          </div>
+          &#x1F96C;
+        </div>
+        <div class="product-info">
+          <div class="product-brand">NaturBebe</div>
+          <div class="product-name">Piure de Spanac cu Cartof</div>
+          <div class="product-meta">
+            <div class="product-price">19.50 lei</div>
+            <div class="product-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.7</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section" style="padding-top: 0;">
+    <div class="section-header">
+      <h2>Categorii</h2>
+    </div>
+    <div class="cat-grid">
+      <a href="shop.html" class="cat-card">
+        <div class="icon">&#x1F34E;</div>
+        <h3>Piureuri</h3>
+      </a>
+      <a href="shop.html" class="cat-card">
+        <div class="icon">&#x1F33E;</div>
+        <h3>Cereale</h3>
+      </a>
+      <a href="shop.html" class="cat-card">
+        <div class="icon">&#x1F36A;</div>
+        <h3>Gustari</h3>
+      </a>
+      <a href="shop.html" class="cat-card">
+        <div class="icon">&#x1F372;</div>
+        <h3>Mese</h3>
+      </a>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section" style="padding-top: 0;">
+    <div class="newsletter">
+      <h2>Ramai la Curent &#x1F4E8;</h2>
+      <p>Primeste oferte exclusive si sfaturi pentru alimentatia celor mici.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Multumim! ✓'; this.querySelector('input').value='';">
+        <input type="email" class="newsletter-input" placeholder="adresa@email.ro" required>
+        <button type="submit" class="newsletter-submit">Aboneaza-te</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Bebe Food. Toate drepturile rezervate.</span>
+    </div>
+  </footer>
+
+  <script src="assets/theme-switcher.js"></script>
+</body>
+</html>
